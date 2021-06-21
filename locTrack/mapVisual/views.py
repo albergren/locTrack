@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from django.conf import settings
-from django.core import serializers
+from django.core.serializers import serialize
 from .models import TrackPoint
 from django.contrib.gis.geos import Point
 
@@ -24,6 +24,13 @@ def get_file(request, file_name):
     response = FileResponse(open(path + '/static/mapVisual/' + file_name + '.geojson', 'rb'))
 
     return response
+
+def get_track_points(request):
+    start = request.GET.get('start', '')
+    end = request.GET.get('end', '')
+    trackpoints = TrackPoint.objects.filter(timestamp__range=[start,end])
+    trackpoints_serialized = serialize('geojson', trackpoints, geometry_field='point',fields=('timestamp',))
+    return JsonResponse(trackpoints_serialized, safe=False)
 
 def import_data_gpx(request):
 
