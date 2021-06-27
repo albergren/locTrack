@@ -2,22 +2,21 @@
 <template>
     <div>
 
-  <p>From:</p>
-  <input type="date" v-model="fromDate">
-  <p>To:</p>
-  <input type="date" v-model="toDate">
+        <p>From:</p>
+          <input type="date" v-model="fromDate">
+        <p>To:</p>
+        <input type="date" v-model="toDate">
 
-  <button v-on:click="getDate">Go</button>
-<br>
-  <div class="large-12 medium-12 small-12 cell">
-      <label>File upload
-        <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
-      </label>
-        <button v-on:click="submitFiles()">Submit</button>
-    </div>
+        <button v-on:click="getDate">Go</button>
+        <br>
+        <div class="large-12 medium-12 small-12 cell">
+          <label>File upload
+            <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
+          </label>
+          <button v-on:click="submitFiles()">Submit</button>
+        </div>
     
-
-</div>
+    </div>
 </template>
 
 

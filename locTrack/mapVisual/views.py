@@ -26,11 +26,13 @@ def get_file(request, file_name):
     return response
 
 def get_track_points(request):
-    print(request)
+
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
+
     trackpoints = TrackPoint.objects.filter(timestamp__range=[start,end])
     trackpoints_serialized = serialize('geojson', trackpoints, geometry_field='point',fields=('timestamp',))
+
     return JsonResponse(trackpoints_serialized, safe=False)
 
 def import_data_gpx(request):
