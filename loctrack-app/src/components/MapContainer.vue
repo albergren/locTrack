@@ -36,50 +36,59 @@ import L from 'leaflet';
              let data = await response.json();
              return data;
          },
-         
+         getData2: async (date1, date2) => {
+             let url = new URL('http://localhost:8000/mapVisual/get-trackpoints');
+             url.search = new URLSearchParams( {start: date1, end: date2 });
+             let response = await fetch(url);
+             let data = await response.json();
+             console.log(data);
+             return data;
+         },
          plotDate: function (dates) {
-
              this.geojsonLayer.clearLayers();
-             this.geojsonLayer.setStyle( {fillColor :'red'});
 
-             const daysDiff = this.getDaysDiff(dates[0],dates[1]);
+             const daysDiff = this.calcDaysDiff(dates[0],dates[1]);
              
 
-             let formattedDate = "";
              let date =  new Date(dates[0]);
-             
+             //let date2 = new Date(dates[1]);
+             console.log("");
              for (let i = 0; i < daysDiff; i++) {
-                 console.log(date);
-                 formattedDate = date.toISOString().split('T')[0].split("-").join("");
-                 console.log(formattedDate.split("-").join(""));
-                 date.setDate(date.getDate() + 1);
+                 let formattedDate1 = date.toISOString()
+                 let date2 = new Date(date.setDate(date.getDate() + 1));
+                 console.log(date2);
+                 let formattedDate2 = date2.toISOString();
 
+ 
                  (async () => {
 
-                     let data = await this.getData(formattedDate)
-                                          .then(res => res)
-                                          .catch(err => {console.log(err)});
+                     let data = await this.getData2(formattedDate1, formattedDate2)
+                                         .then(res => res)
+                                         .catch(err => {console.log(err)});
 
-
-                     let pointLayer = L.geoJSON(null, {
+                     console.log("lkj");
+                     console.log(data);
+                     console.log("sldkjfsdlkfj");
+                     let pointLayer = L.geoJSON(JSON.parse(data), {
                          pointToLayer: function(feature,latlng){
-                             console.log(feature);
-                             const label = String(feature.properties.name)
-                             return new L.CircleMarker(latlng, {
-                                 radius: 1,
-                             }).bindTooltip(label, {permanent: true, opacity: 0.7}).openTooltip();
+                             let marker = new L.circle(latlng,0.01);
+                             return marker;
                      }});
-                     pointLayer.addData(data)
-                     //this.geojsonLayer.addLayer(pointLayer);
+                     //pointLayer.addData(data)
+                     console.log("lksdjfsdj");
+                     this.geojsonLayer.addLayer(pointLayer);
 
+
+
+                     //this.geojsonLayer.addData(data)
                      
-                     this.geojsonLayer.addData(data)
                  }
                  )();
              }
          },
-         
-         getDaysDiff: function (date1, date2) {
+
+         // Calculate number of days between two dates
+         calcaysDiff: function (date1, date2) {
              const _MS_PER_DAY = 1000 * 60 * 60 * 24;
              const a = new Date(date1);
              const b = new Date(date2);

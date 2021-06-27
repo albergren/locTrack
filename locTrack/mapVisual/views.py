@@ -26,6 +26,7 @@ def get_file(request, file_name):
     return response
 
 def get_track_points(request):
+    print(request)
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
     trackpoints = TrackPoint.objects.filter(timestamp__range=[start,end])
@@ -45,10 +46,10 @@ def import_data_gpx(request):
                 for point in segment.points:
                     
                     print('Point at ({0},{1}) -> {2} at time {3}'
-                          .format(point.latitude, point.longitude, point.elevation, point.time))
+                          .format(point.latitude, point.latitude, point.elevation, point.time))
 
                     p = TrackPoint(timestamp=point.time,
-                                   point=Point(point.latitude, point.longitude),
+                                   point=Point(point.longitude, point.latitude),
                                    elevation=point.elevation,
                                    speed=point.speed)
 
