@@ -5,12 +5,13 @@
 <script>
 import L from 'leaflet';
 
- export default {
+export default {
      name: "MapContainer",
      components: {
      },
      props: {
-         dateProp: Array
+         dateProp: Array,
+         opacityProp: Number
      },
      
      data() {
@@ -20,6 +21,9 @@ import L from 'leaflet';
              zoom: 9,
              center: [55.18, 12.0],
              geojsonLayer: "",
+             updateWhenZooming: false,
+             updateWhenIdle: true,
+             preferCanvas: true,
          }
      },
      
@@ -27,6 +31,11 @@ import L from 'leaflet';
          
          dateProp: function(newDates) {
              this.plotDates(newDates);
+         },
+         opacityProp: function(newOpacity) {
+             this.geojsonLayer.eachLayer(function (layer) {
+                 layer.setStyle({opacity : newOpacity })
+             });
          }
      },
      
@@ -48,7 +57,8 @@ import L from 'leaflet';
              let date =  new Date(dates[0]);
              let options = {
                  radius: 1,
-                 color: 'orange'
+                 color: 'purple',
+                 opacity: this.opacityProp,
              };
              
              for (let i = 0; i < daysDiff; i++) {

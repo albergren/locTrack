@@ -4,16 +4,16 @@
     <div id="interface">
 
         <div class="cell cell-map">
-            <map-container  :dateProp="this.dates"/> 
+    <map-container  :dateProp="this.dates" :opacityProp="this.opacity"/> 
         </div>
         <div class="cell cell-edit">
             <controls @dates="newDates"/>
         </div>
-        <div class="cell cell-inspect">
-            Inspect
+        <div class="cell cell-options">
+            <options @opacity="newOpacity"/>
 
         </div>
-	
+        
     </div>
 </template>
 
@@ -22,24 +22,28 @@
 <script>
  import  MapContainer  from './MapContainer.vue'
  import  Controls  from './Controls.vue'
+ import Options from './Options.vue'
 
  export default {
      name: 'Interface',
      components: {
          MapContainer,
          Controls,
+         Options,
      },
      
      data: function() {
          return {
              dates: [] ,
+             opacity: 1,
          };
      },
      methods: {
-         newDates: function (d) {
-             this.dates = d;
-   
-
+         newDates: function (date) {
+             this.dates = date;
+         },
+         newOpacity: function (opacity) {
+             this.opacity = opacity;
          },
      }
  }
@@ -79,7 +83,7 @@
      grid-row: 1;
  }
 
- .cell-inspect {
+ .cell-options {
      grid-column: 2;
      grid-row: 2;
  }
