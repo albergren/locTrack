@@ -21,9 +21,6 @@ export default {
              zoom: 9,
              center: [55.18, 12.0],
              geojsonLayer: "",
-             updateWhenZooming: false,
-             updateWhenIdle: true,
-             preferCanvas: true,
          }
      },
      
@@ -100,7 +97,11 @@ export default {
      
      mounted() {
          
-         let mymap =  L.map('map').setView(this.center, this.zoom);
+         let mymap =  L.map('map', {
+             preferCanvas: true,
+             updateWhenZooming: false,
+             updateWhenIdle: true,
+         }).setView(this.center, this.zoom);
          L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
              maxZoom: 19,
              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
