@@ -11,7 +11,8 @@ export default {
      },
      props: {
          dateProp: Array,
-         opacityProp: Number
+         opacityProp: Number,
+         newLocationProp: Boolean,
      },
      
      data() {
@@ -20,12 +21,19 @@ export default {
              url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
              zoom: 9,
              center: [55.18, 12.0],
-             geojsonLayer: "",
+             geojsonLayer: null,
+             mymap: null,
+             latlngs: [],
+             locationPolygon: null,
          }
      },
      
      watch: {
-         
+         latlngs: function() {
+             this.locationPolygon.remove(this.mymap);
+             this.locationPolygon = L.polygon(this.latlngs, {color: 'red', stroke:true}).addTo(this.mymap);
+
+         },
          dateProp: function(newDates) {
              this.plotDates(newDates);
          },
@@ -33,10 +41,24 @@ export default {
              this.geojsonLayer.eachLayer(function (layer) {
                  layer.setStyle({opacity : newOpacity })
              });
-         }
+         },
+         newLocationProp: function(newLocation) {
+             if (newLocation) {
+                 this.mymap.on('click', this.addClickedLocation);
+             } else {
+                 this.mymap.off('click');
+             }
+         },
      },
      
-     methods: {
+    methods: {
+
+        addClickedLocation: function (ev) {
+            let lat = ev.latlng.lat;
+            let lng = ev.latlng.lng;
+            this.latlngs.push([lat,lng]);
+
+        },
             
          getData: async (date1, date2) => {
              let url = new URL('http://localhost:8000/mapVisual/get-trackpoints');
@@ -97,17 +119,20 @@ export default {
      
      mounted() {
          
-         let mymap =  L.map('map', {
+         this.mymap =  L.map('map', {
              preferCanvas: true,
              updateWhenZooming: false,
              updateWhenIdle: true,
          }).setView(this.center, this.zoom);
          L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
              maxZoom: 19,
-             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-         }).addTo(mymap);
+             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                          opacity: 1,
 
-         this.geojsonLayer = L.geoJSON("").addTo(mymap);
+         }).addTo(this.mymap);
+         this.geojsonLayer = L.geoJSON("").addTo(this.mymap);
+         this.locationPolygon = L.polygon(this.latlngs, {color: 'blue', weight:0.1}).addTo(this.mymap);
+         
 
      },
  }

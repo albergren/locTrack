@@ -8,14 +8,29 @@
         <input type="date" v-model="toDate">
 
         <button v-on:click="getDate">Go</button>
-        <br>
+        <br><br>
         <div class="large-12 medium-12 small-12 cell">
           <label>File upload
             <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
           </label>
-          <button v-on:click="submitFiles()">Submit</button>
-        </div>
+    <button v-on:click="submitFiles()">Submit</button>
     
+    </div>
+    <br>
+    <div id="example-1">
+    <button v-if="!newLocation" v-on:click="createNewLocation()">New location</button>
+    </div>
+    <div v-if="newLocation">
+    <br>
+    <div class="large-12 medium-12 small-12 cell">
+    <label>New location
+    <input type="text" id="location"/>
+    </label>
+    <button v-on:click="addNewLocation()">Add</button>
+        <button v-on:click="cancelNewLocation()">Cancel</button>
+
+    </div>
+    </div>
     </div>
 </template>
 
@@ -27,9 +42,21 @@ import axios from 'axios';
 export default {
     name: 'Controls',
     methods: {
+        createNewLocation: function () {
+            this.newLocation = true;
+            this.$emit('newLoc', this.newLocation);
+        },
+        cancelNewLocation: function () {
+            this.newLocation = false;
+            this.$emit('newLoc', this.newLocation);
+        },
 
+        addNewLocation: function () {
+            
+        },
+        
         getDate: function () {
-            this.$emit('dates', [this.fromDate,this.toDate])
+            this.$emit('dates', [this.fromDate,this.toDate]);
         },
         handleFileUpload: function () {
             this.files = this.$refs.files.files;	    
@@ -61,6 +88,7 @@ export default {
           fromDate: '',
           toDate: '',
           files: '',
+          newLocation: false,
       }
     }
 
