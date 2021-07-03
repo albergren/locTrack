@@ -47,6 +47,8 @@ export default {
                  this.mymap.on('click', this.addClickedLocation);
              } else {
                  this.mymap.off('click');
+                 this.latlngs = [];
+
              }
          },
      },

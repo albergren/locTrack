@@ -52,7 +52,8 @@ export default {
         },
 
         addNewLocation: function () {
-            
+            this.newLocation = false;
+            this.$emit('newLoc', this.newLocation);
         },
         
         getDate: function () {
