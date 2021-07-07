@@ -17,15 +17,19 @@
     
     </div>
     <br>
-    <div id="example-1">
+    <div >
     <button v-if="!newLocation" v-on:click="createNewLocation()">New location</button>
     </div>
     <div v-if="newLocation">
     <br>
     <div class="large-12 medium-12 small-12 cell">
     <label>New location
-    <input type="text" id="location"/>
+    <input type="text" id="locationName" placeholder="Name"/>
+    <input type="text" id="locationCategory" placeholder="Category"/>
+    <input type="text" id="locationDuration" placeholder="Duration"/>
+    <input type="color" id="locationColor" v-model="newColor"/>
     </label>
+    <br>
     <button v-on:click="addNewLocation()">Add</button>
         <button v-on:click="cancelNewLocation()">Cancel</button>
 
@@ -55,7 +59,12 @@ export default {
             this.newLocation = false;
             this.$emit('newLoc', this.newLocation);
         },
-        
+
+        changeLocationColor: function () {
+            this.newColor = this.$refs.locationColor;
+            console.log(this.newColor);
+                
+        },
         getDate: function () {
             this.$emit('dates', [this.fromDate,this.toDate]);
         },
@@ -90,6 +99,7 @@ export default {
           toDate: '',
           files: '',
           newLocation: false,
+          newColor: '',
       }
     }
 
