@@ -1,14 +1,7 @@
 
 <template>
     <div>
-
-        <p>From:</p>
-          <input type="date" v-model="fromDate">
-        <p>To:</p>
-        <input type="date" v-model="toDate">
-
-        <button v-on:click="getDate">Go</button>
-        <br><br>
+     <br><br>
         <div class="large-12 medium-12 small-12 cell">
           <label>File upload
             <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
@@ -27,7 +20,7 @@
     <input type="text" id="locationName" placeholder="Name"/>
     <input type="text" id="locationCategory" placeholder="Category"/>
     <input type="text" id="locationDuration" placeholder="Duration"/>
-    <input type="color" id="locationColor" v-model="newColor" v-on:change="changeLocationColor"/>
+    <input type="color"  id="locationColor" v-model="newColor" v-on:change="changeLocationColor"/>
     </label>
     <br>
     <button v-on:click="addNewLocation">Add</button>
@@ -53,21 +46,19 @@ export default {
         },
         cancelNewLocation: function () {
             this.newLocation = false;
-
+            EventBus.$emit('newLoc', this.newLocation);
         },
 
         addNewLocation: function () {
             this.newLocation = false;
-            this.$emit('newLoc', this.newLocation);
+            EventBus.$emit('newLoc', this.newLocation);
         },
 
         changeLocationColor: function () {
             EventBus.$emit('newLocColor', this.newColor);
                 
         },
-        getDate: function () {
-            this.$emit('dates', [this.fromDate,this.toDate]);
-        },
+
         handleFileUpload: function () {
             this.files = this.$refs.files.files;	    
         },
@@ -95,11 +86,9 @@ export default {
     },
     data() {
       return {
-          fromDate: '',
-          toDate: '',
           files: '',
           newLocation: false,
-          newColor: '',
+          newColor: '#5186db',
       }
     }
 

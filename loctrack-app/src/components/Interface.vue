@@ -4,13 +4,13 @@
     <div id="interface">
 
         <div class="cell cell-map">
-    <map-container  :dateProp="this.dates" :opacityProp="this.opacity" :newLocationProp="this.location"/> 
+    <map-container /> 
         </div>
         <div class="cell cell-edit">
-            <controls @dates="newDates" @newLoc="newLocation"/>
+            <controls />
         </div>
         <div class="cell cell-options">
-            <options @opacity="newOpacity"/>
+            <options/>
 
         </div>
         
@@ -34,20 +34,13 @@
      
      data: function() {
          return {
-             dates: [] ,
              opacity: 0.5,
-             location: false,
          };
      },
      methods: {
-         newDates: function (date) {
-             this.dates = date;
-         },
+
          newOpacity: function (opacity) {
              this.opacity = opacity;
-         },
-         newLocation: function (location) {
-             this.location = location;
          },
      }
  }
