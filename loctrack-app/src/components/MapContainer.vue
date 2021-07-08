@@ -29,6 +29,7 @@ export default {
         latlngs: function() {
             this.locationPolygon.remove(this.mymap);
             this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true}).addTo(this.mymap);
+
         },
     },
     
@@ -42,7 +43,7 @@ export default {
             }
         },
 
-        chnageOpacity: function(newOpacity) {
+        changeOpacity: function(newOpacity) {
             this.geojsonLayer.eachLayer(function (layer) {
                 layer.setStyle({opacity : newOpacity })
             });
@@ -57,6 +58,7 @@ export default {
             let lat = ev.latlng.lat;
             let lng = ev.latlng.lng;
             this.latlngs.push([lat,lng]);
+            EventBus.$emit('locationPolygon', this.locationPolygon.toGeoJSON());
         },
         
         getData: async (date1, date2) => {
@@ -121,7 +123,6 @@ export default {
         EventBus.$on('newLocColor', this.changePolygonColor);
         EventBus.$on('dates', this.plotDates);
         EventBus.$on('opacity', this.changeOpacity);
-
     },
     
     mounted() {
@@ -138,8 +139,6 @@ export default {
         }).addTo(this.mymap);
         this.geojsonLayer = L.geoJSON("").addTo(this.mymap);
         this.locationPolygon = L.polygon(this.latlngs, {fillColor: this.locationPolygonColor , weight:0.1}).addTo(this.mymap);
-        
-
     },
 }
 </script>

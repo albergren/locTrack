@@ -17,10 +17,10 @@
     <br>
     <div class="large-12 medium-12 small-12 cell">
     <label>New location
-    <input type="text" id="locationName" placeholder="Name"/>
-    <input type="text" id="locationCategory" placeholder="Category"/>
-    <input type="text" id="locationDuration" placeholder="Duration"/>
-    <input type="color"  id="locationColor" v-model="newColor" v-on:change="changeLocationColor"/>
+    <input type="text" id="locationName" v-model="newLocationName" placeholder="Name"/>
+    <input type="text" id="locationCategory" v-model="newLocationCategory" placeholder="Category"/>
+    <input type="text" id="locationDuration" v-model="newLocationDuration" placeholder="Duration"/>
+    <input type="color"  id="locationColor" v-model="newLocationColor" v-on:change="changeLocationColor"/>
     </label>
     <br>
     <button v-on:click="addNewLocation">Add</button>
@@ -43,15 +43,36 @@ export default {
         createNewLocation: function () {
             this.newLocation = true;
             EventBus.$emit('newLoc', this.newLocation);
+            EventBus.$on('locationPolygon', data => {this.newLocationPolygon = data});
         },
         cancelNewLocation: function () {
             this.newLocation = false;
             EventBus.$emit('newLoc', this.newLocation);
+            EventBus.$off('locationPolygon');
+
         },
 
         addNewLocation: function () {
             this.newLocation = false;
-            EventBus.$emit('newLoc', this.newLocation);
+            axios.post( 'http://localhost:8000/mapVisual/add-new-location/',
+                        JSON.stringify( {
+                            name: this.newLocationName,
+                            category: this.newLocationCategory,
+                            duration: this.newLocationDuration,
+                            color: this.newLocationColor,
+                            polygon: this.newLocationPolygon
+                        }),
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                      ).then(function() {
+                          console.log('Success!');
+                      }).catch(function() {
+                          console.log('Failure!');
+                      });
+
         },
 
         changeLocationColor: function () {
@@ -88,7 +109,15 @@ export default {
       return {
           files: '',
           newLocation: false,
-          newColor: '#5186db',
+          newLocationColor: '#5186db',
+          newLocationName: '',
+          newLocationDuration: '',
+          newLocationCategory: '',
+          newLocationPolygon: '',
+          
+
+
+
       }
     }
 
