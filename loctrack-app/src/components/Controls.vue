@@ -76,7 +76,7 @@ export default {
         },
 
         changeLocationColor: function () {
-            EventBus.$emit('newLocColor', this.newColor);
+            EventBus.$emit('newLocColor', this.newLocationColor);
                 
         },
 
