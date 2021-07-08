@@ -3,7 +3,8 @@
 </template>
 
 <script>
-import L from 'leaflet';
+    import L from 'leaflet';
+import EventBus from '../event-bus';
 
 export default {
      name: "MapContainer",
@@ -12,7 +13,6 @@ export default {
      props: {
          dateProp: Array,
          opacityProp: Number,
-         newLocationProp: Boolean,
      },
      
      data() {
@@ -25,13 +25,14 @@ export default {
              mymap: null,
              latlngs: [],
              locationPolygon: null,
+             locationPolygonColor: '#ffffff',
          }
      },
      
      watch: {
          latlngs: function() {
              this.locationPolygon.remove(this.mymap);
-             this.locationPolygon = L.polygon(this.latlngs, {color: 'red', stroke:true}).addTo(this.mymap);
+             this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true}).addTo(this.mymap);
 
          },
          dateProp: function(newDates) {
@@ -42,18 +43,24 @@ export default {
                  layer.setStyle({opacity : newOpacity })
              });
          },
-         newLocationProp: function(newLocation) {
-             if (newLocation) {
-                 this.mymap.on('click', this.addClickedLocation);
-             } else {
-                 this.mymap.off('click');
-                 this.latlngs = [];
-
-             }
-         },
+   
      },
      
     methods: {
+        newLocation: function(newLocation) {
+            console.log(newLocation);
+            if (newLocation) {
+                this.mymap.on('click', this.addClickedLocation);
+            } else {
+                this.mymap.off('click');
+                this.latlngs = [];
+
+            }
+        },
+        changePolygonColor: function (color) {
+            this.locationPolygonColor = color
+            this.locationPolygon.setStyle({color:this.locationPolygonColor});
+        },
 
         addClickedLocation: function (ev) {
             let lat = ev.latlng.lat;
@@ -117,10 +124,14 @@ export default {
              const daysDiff =  (date2 != "") ? Math.floor((utc2 - utc1) / _MS_PER_DAY) : 1;
              return daysDiff;
          },
-     },
+    },
+
+    created() {
+        EventBus.$on('newLoc', this.newLocation);
+        EventBus.$on('newLocColor', this.changePolygonColor);
+    },
      
      mounted() {
-         
          this.mymap =  L.map('map', {
              preferCanvas: true,
              updateWhenZooming: false,
@@ -133,7 +144,7 @@ export default {
 
          }).addTo(this.mymap);
          this.geojsonLayer = L.geoJSON("").addTo(this.mymap);
-         this.locationPolygon = L.polygon(this.latlngs, {color: 'blue', weight:0.1}).addTo(this.mymap);
+         this.locationPolygon = L.polygon(this.latlngs, {fillColor: this.locationPolygonColor , weight:0.1}).addTo(this.mymap);
          
 
      },

@@ -13,12 +13,12 @@
           <label>File upload
             <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
           </label>
-    <button v-on:click="submitFiles()">Submit</button>
+    <button v-on:click="submitFiles">Submit</button>
     
     </div>
     <br>
     <div >
-    <button v-if="!newLocation" v-on:click="createNewLocation()">New location</button>
+    <button v-if="!newLocation" v-on:click="createNewLocation">New location</button>
     </div>
     <div v-if="newLocation">
     <br>
@@ -27,11 +27,11 @@
     <input type="text" id="locationName" placeholder="Name"/>
     <input type="text" id="locationCategory" placeholder="Category"/>
     <input type="text" id="locationDuration" placeholder="Duration"/>
-    <input type="color" id="locationColor" v-model="newColor"/>
+    <input type="color" id="locationColor" v-model="newColor" v-on:change="changeLocationColor"/>
     </label>
     <br>
-    <button v-on:click="addNewLocation()">Add</button>
-        <button v-on:click="cancelNewLocation()">Cancel</button>
+    <button v-on:click="addNewLocation">Add</button>
+        <button v-on:click="cancelNewLocation">Cancel</button>
 
     </div>
     </div>
@@ -42,17 +42,18 @@
 
 <script>
 import axios from 'axios';
-  
+import EventBus from '../event-bus';
+
 export default {
     name: 'Controls',
     methods: {
         createNewLocation: function () {
             this.newLocation = true;
-            this.$emit('newLoc', this.newLocation);
+            EventBus.$emit('newLoc', this.newLocation);
         },
         cancelNewLocation: function () {
             this.newLocation = false;
-            this.$emit('newLoc', this.newLocation);
+
         },
 
         addNewLocation: function () {
@@ -61,8 +62,7 @@ export default {
         },
 
         changeLocationColor: function () {
-            this.newColor = this.$refs.locationColor;
-            console.log(this.newColor);
+            EventBus.$emit('newLocColor', this.newColor);
                 
         },
         getDate: function () {
