@@ -138,7 +138,10 @@ export default {
 
         }).addTo(this.mymap);
         this.geojsonLayer = L.geoJSON("").addTo(this.mymap);
-        this.locationPolygon = L.polygon(this.latlngs, {fillColor: this.locationPolygonColor , weight:0.1}).addTo(this.mymap);
+        this.locationPolygon = L.polygon(this.latlngs, {
+                                             fillColor: this.locationPolygonColor ,
+                                             weight:0.1
+                                         }).addTo(this.mymap);
     },
 }
 </script>

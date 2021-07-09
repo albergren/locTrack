@@ -3,8 +3,9 @@ from django.http import HttpResponse
 from django.http import FileResponse, JsonResponse
 from django.conf import settings
 from django.core.serializers import serialize
-from .models import TrackPoint
-from django.contrib.gis.geos import Point
+from .models import TrackPoint, Location
+from django.contrib.gis.geos import Point, Polygon
+import json
 
 import gpxpy
 import os
@@ -57,4 +58,20 @@ def import_data_gpx(request):
 
                     p.save()
 
+    return HttpResponse(status=200)
+
+def add_new_location(request):
+    req_json = json.loads(request.body)
+
+    coords = json.loads(request.body)['polygon']['geometry']['coordinates'][0]
+    coords.append(coords[0])
+    print(coords)
+    coords_tuple = tuple(json.loads(request.body)['polygon']['geometry']['coordinates'][0])
+    l = Location(name=req_json['name'],
+                 category=req_json['category'],
+                 time_until_visited=int(req_json['timeUntilVisited']),
+                 color=req_json['color'],
+                 polygon=Polygon(coords))
+                 
+                                             
     return HttpResponse(status=200)

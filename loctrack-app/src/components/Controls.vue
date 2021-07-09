@@ -15,7 +15,8 @@
     </div>
     <div v-if="newLocation">
     <br>
-    <div class="large-12 medium-12 small-12 cell">
+    <div>
+    <form>
     <label>New location
     <input type="text" id="locationName" v-model="newLocationName" placeholder="Name"/>
     <input type="text" id="locationCategory" v-model="newLocationCategory" placeholder="Category"/>
@@ -23,9 +24,9 @@
     <input type="color"  id="locationColor" v-model="newLocationColor" v-on:change="changeLocationColor"/>
     </label>
     <br>
-    <button v-on:click="addNewLocation">Add</button>
-        <button v-on:click="cancelNewLocation">Cancel</button>
-
+    <button type="button" v-on:click="addNewLocation">Add</button>
+        <button type="button" v-on:click="cancelNewLocation">Cancel</button>
+    </form>
     </div>
     </div>
     </div>
@@ -54,11 +55,12 @@ export default {
 
         addNewLocation: function () {
             this.newLocation = false;
+            console.log(this.newLocationPolygon);
             axios.post( 'http://localhost:8000/mapVisual/add-new-location/',
                         JSON.stringify( {
                             name: this.newLocationName,
                             category: this.newLocationCategory,
-                            duration: this.newLocationDuration,
+                            timeUntilVisited: this.newLocationDuration,
                             color: this.newLocationColor,
                             polygon: this.newLocationPolygon
                         }),
