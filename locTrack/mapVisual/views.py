@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import FileResponse, JsonResponse
+from django.http import FileResponse, JsonResponse, HttpResponse
 from django.conf import settings
 from django.core.serializers import serialize
 from .models import TrackPoint, Location
@@ -72,6 +71,12 @@ def add_new_location(request):
                  time_until_visited=int(req_json['timeUntilVisited']),
                  color=req_json['color'],
                  polygon=Polygon(coords))
-                 
+
+    l.save()
                                              
     return HttpResponse(status=200)
+
+def get_all_locations(request):
+    locations = Location.objects.all()
+    locations_serialized = serialize('json', locations ,fields=('name'))
+    return JsonResponse(locations_serialized, safe=False)

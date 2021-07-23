@@ -34,15 +34,8 @@
      
      data: function() {
          return {
-             opacity: 0.5,
          };
      },
-     methods: {
-
-         newOpacity: function (opacity) {
-             this.opacity = opacity;
-         },
-     }
  }
 </script>
 
