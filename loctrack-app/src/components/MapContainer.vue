@@ -22,14 +22,17 @@ export default {
             latlngs: [],
             locationPolygon: null,
             locationPolygonColor: '#5186db',
+            locationsLayer: null,
+            locationData: null,
         }
     },
     
     watch: {
         latlngs: function() {
             this.locationPolygon.remove(this.mymap);
-            this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true}).addTo(this.mymap);
-
+            this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true})//.addTo(this.mymap);
+            console.log(this.locationPolygon);
+            this.locationPolygon.addTo(this.mymap);
         },
     },
     
@@ -59,6 +62,28 @@ export default {
             let lng = ev.latlng.lng;
             this.latlngs.push([lat,lng]);
             EventBus.$emit('locationPolygon', this.locationPolygon.toGeoJSON());
+        },
+        showCheckedLocations: function (locationsToShow) {
+
+            let polyLayers =  (this.locationData.map(function (location) {
+                if ( locationsToShow.includes(location.pk) ) {
+                    let newPoly = L.polygon([[12,55], [13,56], [11,54]], {color: "red", stroke:true});
+                    return newPoly;
+               }
+            }));
+            
+            
+            for(let layer of polyLayers) {
+                if (layer != null){
+                this.locationsLayer.addLayer(layer);
+                }
+            }
+
+
+        },
+
+        setLocationData: function (data) {
+            this.locationData = data;
         },
         
         getData: async (date1, date2) => {
@@ -123,6 +148,8 @@ export default {
         EventBus.$on('newLocColor', this.changePolygonColor);
         EventBus.$on('dates', this.plotDates);
         EventBus.$on('opacity', this.changeOpacity);
+        EventBus.$on('checkedLocations', this.showCheckedLocations);
+        EventBus.$on('locationData', this.setLocationData);
     },
     
     mounted() {
@@ -141,7 +168,9 @@ export default {
         this.locationPolygon = L.polygon(this.latlngs, {
                                              fillColor: this.locationPolygonColor ,
                                              weight:0.1
-                                         }).addTo(this.mymap);
+        }).addTo(this.mymap);
+	this.locationsLayer = new L.FeatureGroup().addTo(this.mymap);
+	console.log(this.locationsLayer);
     },
 }
 </script>

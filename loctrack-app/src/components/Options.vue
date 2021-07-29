@@ -14,14 +14,20 @@
   <input type="range" min="1" max="10" value="5" class="slider" id="opacityRange" ref="sliderValue"  v-on:change="changeOpacity()">
     </div>
     <p>Locations</p>
-    <div>
+    <table>
+    <tr v-for="location in locations" :key="location.pk">
+    <td >
+        {{  location.fields.name  }}
+    </td>
+    <td>
+    <input type="checkbox"  :value=location.pk v-model="checkedLocations">
+    </td>
+    <td>
+       <button v-on:click="editLocation">Edit</button>
 
-    <ul>
-    <li v-for="location in locations" :key="location.fields.name">
-    {{ location.fields.name}}
-</li>
-    </ul>
-    </div>
+    </td>
+    </tr>
+    </table>
   </div>
 </template>
     
@@ -36,12 +42,18 @@ export default {
             fromDate: '',
             toDate: '',
             locations: [],
+            checkedLocations: [],
         };
     },
 
+    watch: {
+        checkedLocations: function () {
+            EventBus.$emit('checkedLocations', this.checkedLocations);
+        },
+    },
     mounted() {
-	this.getAllLocations();
-	
+        this.getAllLocations();
+        
     },
     methods: {
         changeOpacity: function () {
@@ -54,11 +66,14 @@ export default {
             
             axios.get( 'http://localhost:8000/mapVisual/get-all-locations/'
                      ).then(resp =>  {
-                         let data = JSON.parse(resp.data)
+                         let data = JSON.parse(resp.data);
                          this.locations = data;
+                         EventBus.$emit('locationData', this.locations);
                      }).catch(function() {
                          console.log('Failure!');
                      })
+        },
+        editLocation: function () {
         },
 
     },
