@@ -64,19 +64,28 @@ export default {
             EventBus.$emit('locationPolygon', this.locationPolygon.toGeoJSON());
         },
         showCheckedLocations: function (locationsToShow) {
-
             let polyLayers =  (this.locationData.map(function (location) {
-                if ( locationsToShow.includes(location.pk) ) {
-                    let newPoly = L.polygon([[12,55], [13,56], [11,54]], {color: "red", stroke:true});
+
+                if ( locationsToShow.includes(location.properties.pk) ) {
+/**                    let newArr = [];
+                   for (let i of location.geometry.coordinates[0]) {
+                        newArr.push(i.reverse());
+                        console.log(i);
+                    }
+                    console.log(location.geometry.coordinates[0]);*/
+                    let newPoly = L.polygon(location.geometry.coordinates[0] , {color: location.properties.color, stroke:true});
                     return newPoly;
-               }
+                }
             }));
             
             
             for(let layer of polyLayers) {
                 if (layer != null){
-                this.locationsLayer.addLayer(layer);
+                    console.log(layer);
+                    this.locationsLayer.addLayer(layer);
+
                 }
+
             }
 
 
@@ -170,7 +179,6 @@ export default {
                                              weight:0.1
         }).addTo(this.mymap);
 	this.locationsLayer = new L.FeatureGroup().addTo(this.mymap);
-	console.log(this.locationsLayer);
     },
 }
 </script>

@@ -64,7 +64,6 @@ def add_new_location(request):
 
     coords = json.loads(request.body)['polygon']['geometry']['coordinates'][0]
     coords.append(coords[0])
-    print(coords)
     coords_tuple = tuple(json.loads(request.body)['polygon']['geometry']['coordinates'][0])
     l = Location(name=req_json['name'],
                  category=req_json['category'],
@@ -78,5 +77,8 @@ def add_new_location(request):
 
 def get_all_locations(request):
     locations = Location.objects.all()
-    locations_serialized = serialize('json', locations ,fields=('name'))
+    locations_serialized = serialize('geojson', locations ,geometry_field='polygon',fields=('pk','name','color'))
     return JsonResponse(locations_serialized, safe=False)
+
+
+

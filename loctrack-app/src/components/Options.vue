@@ -15,12 +15,12 @@
     </div>
     <p>Locations</p>
     <table>
-    <tr v-for="location in locations" :key="location.pk">
+    <tr v-for="location in locations" :key="location.properties.pk">
     <td >
-        {{  location.fields.name  }}
+        {{  location.properties.name }}
     </td>
     <td>
-    <input type="checkbox"  :value=location.pk v-model="checkedLocations">
+    <input type="checkbox"  :value=location.properties.pk v-model="checkedLocations">
     </td>
     <td>
        <button v-on:click="editLocation">Edit</button>
@@ -67,7 +67,7 @@ export default {
             axios.get( 'http://localhost:8000/mapVisual/get-all-locations/'
                      ).then(resp =>  {
                          let data = JSON.parse(resp.data);
-                         this.locations = data;
+                         this.locations = data.features;
                          EventBus.$emit('locationData', this.locations);
                      }).catch(function() {
                          console.log('Failure!');
