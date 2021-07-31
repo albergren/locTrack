@@ -29,10 +29,11 @@ export default {
     
     watch: {
         latlngs: function() {
-            this.locationPolygon.remove(this.mymap);
-            this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true})//.addTo(this.mymap);
-            console.log(this.locationPolygon);
-            this.locationPolygon.addTo(this.mymap);
+          //  this.locationPolygon.remove(this.mymap);
+            //console.log("latlngs: \n", this.latlngs);
+           // this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true})//.addTo(this.mymap);
+            //console.log("new polygon: ", this.locationPolygon);
+           // this.locationPolygon.addTo(this.mymap);
         },
     },
     
@@ -61,18 +62,23 @@ export default {
             let lat = ev.latlng.lat;
             let lng = ev.latlng.lng;
             this.latlngs.push([lat,lng]);
-            EventBus.$emit('locationPolygon', this.locationPolygon.toGeoJSON());
+            
+            this.locationPolygon.remove(this.mymap);
+            this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true})
+            this.locationPolygon.addTo(this.mymap)
+            
+            let locationPolygonJson = this.locationPolygon.toGeoJSON();
+            // toGeoJson swaps coordiantes, so they are swapped back
+            locationPolygonJson.geometry.coordinates[0] = (locationPolygonJson.geometry.coordinates[0].map(function (latlng) {
+                return [latlng[1],latlng[0]];
+            }));
+
+            EventBus.$emit('locationPolygon',locationPolygonJson);
         },
         showCheckedLocations: function (locationsToShow) {
             let polyLayers =  (this.locationData.map(function (location) {
 
                 if ( locationsToShow.includes(location.properties.pk) ) {
-/**                    let newArr = [];
-                   for (let i of location.geometry.coordinates[0]) {
-                        newArr.push(i.reverse());
-                        console.log(i);
-                    }
-                    console.log(location.geometry.coordinates[0]);*/
                     let newPoly = L.polygon(location.geometry.coordinates[0] , {color: location.properties.color, stroke:true});
                     return newPoly;
                 }
@@ -81,7 +87,6 @@ export default {
             
             for(let layer of polyLayers) {
                 if (layer != null){
-                    console.log(layer);
                     this.locationsLayer.addLayer(layer);
 
                 }

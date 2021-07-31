@@ -55,7 +55,7 @@ export default {
 
         addNewLocation: function () {
             this.newLocation = false;
-            console.log(this.newLocationPolygon);
+            console.log("newLocationPolygon: \n",this.newLocationPolygon);
             axios.post( 'http://localhost:8000/mapVisual/add-new-location/',
                         JSON.stringify( {
                             name: this.newLocationName,

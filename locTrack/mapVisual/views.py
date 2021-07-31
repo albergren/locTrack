@@ -63,8 +63,10 @@ def add_new_location(request):
     req_json = json.loads(request.body)
 
     coords = json.loads(request.body)['polygon']['geometry']['coordinates'][0]
+    print("coords: \n", coords)
     coords.append(coords[0])
     coords_tuple = tuple(json.loads(request.body)['polygon']['geometry']['coordinates'][0])
+    print("coords tuple", coords_tuple)
     l = Location(name=req_json['name'],
                  category=req_json['category'],
                  time_until_visited=int(req_json['timeUntilVisited']),
