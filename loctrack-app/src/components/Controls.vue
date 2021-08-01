@@ -46,10 +46,12 @@ export default {
             EventBus.$emit('newLoc', this.newLocation);
             EventBus.$on('locationPolygon', data => {this.newLocationPolygon = data});
         },
+        
         cancelNewLocation: function () {
             this.newLocation = false;
             EventBus.$emit('newLoc', this.newLocation);
             EventBus.$off('locationPolygon');
+            this.clearNewLocationInputFields();
 
         },
 
@@ -70,6 +72,7 @@ export default {
                             }
                         }
                       ).then(function() {
+                          context.clearNewLocationInputFields();
                           context.newLocation = false;
                           EventBus.$emit('locationAdded');
                           console.log('Success!');
@@ -77,6 +80,13 @@ export default {
                           console.log('Failure!');
                       });
 
+        },
+
+        clearNewLocationInputFields: function () {
+            this.newLocationName = ''
+            this.newLocationCategory = ''
+            this.newLocationDuration = ''
+            this.newLocationColor = '#5186db'
         },
 
         changeLocationColor: function () {
