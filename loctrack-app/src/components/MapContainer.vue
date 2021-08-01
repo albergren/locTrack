@@ -79,16 +79,24 @@ export default {
         },
         
         showCheckedLocations: function (locationsToShow) {
-            
+
             let polygonLayers =  (this.locationData.map(function (location) {
 
-                if ( locationsToShow.includes(location.properties.pk) ) {
+                if (locationsToShow.includes(location.properties.pk) ) {
+                    
                     let polygonToShow = L.polygon(location.geometry.coordinates[0],
                                             {color: location.properties.color, stroke:true});
                     return polygonToShow;
                 }
             }));
-            
+
+            // remove layers
+            let context = this.locationsLayer;
+            this.locationsLayer.eachLayer(function(layer) {
+                context.removeLayer(layer);
+            });
+
+            // add layers
             for(let layer of polygonLayers) {
                 if (layer != null){
                     this.locationsLayer.addLayer(layer);
