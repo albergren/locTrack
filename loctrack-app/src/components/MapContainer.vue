@@ -14,6 +14,7 @@ export default {
     data() {
         
         return {
+            
             url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             zoom: 9,
             center: [55.18, 12.0],
@@ -27,18 +28,12 @@ export default {
         }
     },
     
-    watch: {
-        latlngs: function() {
-          //  this.locationPolygon.remove(this.mymap);
-            //console.log("latlngs: \n", this.latlngs);
-           // this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true})//.addTo(this.mymap);
-            //console.log("new polygon: ", this.locationPolygon);
-           // this.locationPolygon.addTo(this.mymap);
-        },
-    },
+
     
     methods: {
+        
         newLocation: function(newLocation) {
+            
             if (newLocation) {
                 this.mymap.on('click', this.addClickedLocation);
             } else {
@@ -48,59 +43,66 @@ export default {
         },
 
         changeOpacity: function(newOpacity) {
+            
             this.geojsonLayer.eachLayer(function (layer) {
                 layer.setStyle({opacity : newOpacity })
             });
         },
         
         changePolygonColor: function (color) {
+            
             this.locationPolygonColor = color
             this.locationPolygon.setStyle({color:this.locationPolygonColor});
         },
 
         addClickedLocation: function (ev) {
+            
             let lat = ev.latlng.lat;
             let lng = ev.latlng.lng;
             this.latlngs.push([lat,lng]);
             
             this.locationPolygon.remove(this.mymap);
-            this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor, stroke:true})
+            this.locationPolygon = L.polygon(this.latlngs, {color: this.locationPolygonColor,
+                                                            stroke:true})
             this.locationPolygon.addTo(this.mymap)
             
             let locationPolygonJson = this.locationPolygon.toGeoJSON();
+
             // toGeoJson swaps coordiantes, so they are swapped back
-            locationPolygonJson.geometry.coordinates[0] = (locationPolygonJson.geometry.coordinates[0].map(function (latlng) {
+            let locationCoords = locationPolygonJson.geometry.coordinates[0];
+            let locationCoordsSwapped = (locationCoords.map(function (latlng) {
                 return [latlng[1],latlng[0]];
             }));
+            locationPolygonJson.geometry.coordinates[0] = locationCoordsSwapped;
 
             EventBus.$emit('locationPolygon',locationPolygonJson);
         },
+        
         showCheckedLocations: function (locationsToShow) {
-            let polyLayers =  (this.locationData.map(function (location) {
+            
+            let polygonLayers =  (this.locationData.map(function (location) {
 
                 if ( locationsToShow.includes(location.properties.pk) ) {
-                    let newPoly = L.polygon(location.geometry.coordinates[0] , {color: location.properties.color, stroke:true});
-                    return newPoly;
+                    let polygonToShow = L.polygon(location.geometry.coordinates[0],
+                                            {color: location.properties.color, stroke:true});
+                    return polygonToShow;
                 }
             }));
             
-            
-            for(let layer of polyLayers) {
+            for(let layer of polygonLayers) {
                 if (layer != null){
                     this.locationsLayer.addLayer(layer);
-
                 }
-
             }
-
-
         },
 
         setLocationData: function (data) {
+            
             this.locationData = data;
         },
         
         getData: async (date1, date2) => {
+            
             let url = new URL('http://localhost:8000/mapVisual/get-trackpoints');
             url.search = new URLSearchParams( {start: date1, end: date2 });
             let response = await fetch(url);
@@ -109,6 +111,7 @@ export default {
         },
         
         plotDates: function (dates) {
+            
             this.geojsonLayer.clearLayers();
             const daysDiff = this.calcDaysDiff(dates[0],dates[1]);
             
@@ -158,6 +161,7 @@ export default {
     },
 
     created() {
+        
         EventBus.$on('newLoc', this.newLocation);
         EventBus.$on('newLocColor', this.changePolygonColor);
         EventBus.$on('dates', this.plotDates);
@@ -167,6 +171,7 @@ export default {
     },
     
     mounted() {
+        
         this.mymap =  L.map('map', {
             preferCanvas: true,
             updateWhenZooming: false,
@@ -179,10 +184,8 @@ export default {
 
         }).addTo(this.mymap);
         this.geojsonLayer = L.geoJSON("").addTo(this.mymap);
-        this.locationPolygon = L.polygon(this.latlngs, {
-                                             fillColor: this.locationPolygonColor ,
-                                             weight:0.1
-        }).addTo(this.mymap);
+        this.locationPolygon = L.polygon(this.latlngs, {fillColor: this.locationPolygonColor,
+                                                        weight:0.1}).addTo(this.mymap);
 	this.locationsLayer = new L.FeatureGroup().addTo(this.mymap);
     },
 }
