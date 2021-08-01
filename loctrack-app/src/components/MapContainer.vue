@@ -98,6 +98,7 @@ export default {
 
             // add layers
             for(let layer of polygonLayers) {
+                console.log(layer);
                 if (layer != null){
                     this.locationsLayer.addLayer(layer);
                 }

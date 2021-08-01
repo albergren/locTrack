@@ -15,7 +15,7 @@
     </div>
     <p>Locations</p>
     <table>
-    <tr v-for="location in locations" :key="location.properties.pk">
+    <tr v-for="location in locations" :key="location.properties.pk" >
     <td >
         {{  location.properties.name }}
     </td>
@@ -50,6 +50,7 @@ export default {
         checkedLocations: function () {
             EventBus.$emit('checkedLocations', this.checkedLocations);
         },
+        
     },
     mounted() {
         this.getAllLocations();
@@ -63,10 +64,12 @@ export default {
             EventBus.$emit('dates', [this.fromDate,this.toDate]);
         },
         getAllLocations: function () {
+            console.log("getAllLocations");
             
             axios.get( 'http://localhost:8000/mapVisual/get-all-locations/'
                      ).then(resp =>  {
-                         let data = JSON.parse(resp.data);
+                         this.locations = [];
+                         let data = JSON.parse(resp.data);              
                          this.locations = data.features;
                          EventBus.$emit('locationData', this.locations);
                      }).catch(function() {
@@ -77,7 +80,10 @@ export default {
         },
 
     },
-
+    created() {
+        
+        EventBus.$on('locationAdded', this.getAllLocations);
+    },
 }
 </script>
 
