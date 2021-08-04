@@ -56,7 +56,6 @@ export default {
         },
 
         addNewLocation: function () {
-            console.log("newLocationPolygon: \n",this.newLocationPolygon);
             let context = this;
             axios.post( 'http://localhost:8000/mapVisual/add-new-location/',
                         JSON.stringify( {
@@ -72,9 +71,10 @@ export default {
                             }
                         }
                       ).then(function() {
-                          context.clearNewLocationInputFields();
-                          context.newLocation = false;
+                          //context.clearNewLocationInputFields();
+                          //context.newLocation = false;
                           EventBus.$emit('locationAdded');
+                          context.cancelNewLocation();
                           console.log('Success!');
                       }).catch(function() {
                           console.log('Failure!');

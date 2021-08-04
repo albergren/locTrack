@@ -36,9 +36,13 @@ export default {
             
             if (newLocation) {
                 this.mymap.on('click', this.addClickedLocation);
+                this.locationPolygon.remove(this.mymap);
+
             } else {
                 this.mymap.off('click');
                 this.latlngs = [];
+                this.locationPolygon.remove(this.mymap);
+
             }
         },
 
@@ -90,15 +94,14 @@ export default {
                 }
             }));
 
-            // remove layers
+            // remove polygon layers
             let context = this.locationsLayer;
             this.locationsLayer.eachLayer(function(layer) {
                 context.removeLayer(layer);
             });
 
-            // add layers
+            // add polygon layers
             for(let layer of polygonLayers) {
-                console.log(layer);
                 if (layer != null){
                     this.locationsLayer.addLayer(layer);
                 }
