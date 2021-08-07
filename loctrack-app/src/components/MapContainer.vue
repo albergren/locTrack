@@ -81,9 +81,10 @@ export default {
 
             EventBus.$emit('locationPolygon',locationPolygonJson);
         },
-        
+         
         showCheckedLocations: function (locationsToShow) {
 
+            // create new polygon layers
             let polygonLayers =  (this.locationData.map(function (location) {
 
                 if (locationsToShow.includes(location.properties.pk) ) {
@@ -94,13 +95,13 @@ export default {
                 }
             }));
 
-            // remove polygon layers
+            // remove old polygon layers
             let context = this.locationsLayer;
             this.locationsLayer.eachLayer(function(layer) {
                 context.removeLayer(layer);
             });
 
-            // add polygon layers
+            // add new polygon layers
             for(let layer of polygonLayers) {
                 if (layer != null){
                     this.locationsLayer.addLayer(layer);

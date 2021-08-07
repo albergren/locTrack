@@ -71,8 +71,6 @@ export default {
                             }
                         }
                       ).then(function() {
-                          //context.clearNewLocationInputFields();
-                          //context.newLocation = false;
                           EventBus.$emit('locationAdded');
                           context.cancelNewLocation();
                           console.log('Success!');
