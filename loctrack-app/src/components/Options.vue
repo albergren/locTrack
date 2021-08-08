@@ -28,6 +28,23 @@
     </td>
     </tr>
     </table>
+
+    <p>Categories</p>
+    <table>
+    <tr v-for="category in categories" :key="category.properties.pk" >
+    <td >
+        {{  category.properties.name }}
+    </td>
+    <td>
+   // <input type="checkbox"  :value=category.properties.pk v-model="checkedLocations">
+    </td>
+    <td>
+       <button v-on:click="editCategory">Edit</button>
+
+    </td>
+    </tr>
+    </table>
+    
   </div>
 </template>
     
@@ -43,6 +60,7 @@ export default {
             toDate: '',
             locations: [],
             checkedLocations: [],
+            categories : [],
         };
     },
 
@@ -76,7 +94,18 @@ export default {
                          console.log('Failure!');
                      })
         },
+        
         editLocation: function () {
+        },
+
+        getAllCategories: function () {
+            console.log("getAllCategories");
+            axios.get('http://localhost:8000/mapVisual/all-categories/'
+                     ).then(resp => {
+                         console.log(JSON.parse(resp.data));
+                     }).catch(function() {
+                                        console.log('Failure!');
+                     })
         },
 
     },

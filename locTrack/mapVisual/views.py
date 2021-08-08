@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import FileResponse, JsonResponse, HttpResponse
 from django.conf import settings
 from django.core.serializers import serialize
-from .models import TrackPoint, Location
+from .models import TrackPoint, Location, Category
 from django.contrib.gis.geos import Point, Polygon
 import json
 
@@ -67,8 +67,10 @@ def add_new_location(request):
     coords.append(coords[0])
     coords_tuple = tuple(json.loads(request.body)['polygon']['geometry']['coordinates'][0])
     print("coords tuple", coords_tuple)
+
+    
     l = Location(name=req_json['name'],
-                 category=req_json['category'],
+                 category=null,#req_json['category'],
                  time_until_visited=int(req_json['timeUntilVisited']),
                  color=req_json['color'],
                  polygon=Polygon(coords))
@@ -83,4 +85,10 @@ def get_all_locations(request):
     return JsonResponse(locations_serialized, safe=False)
 
 
+def all_categories(request):
+    categories = Category.objects.all()
+    print("lsdkjflsdjflksjdlfjlsdjfljsdfjsdlfjlsdajdf", categories)
+    categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent_id'))
+    return JsonResponse(categories_serialized, safe=False)
 
+                                      
