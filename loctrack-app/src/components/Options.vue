@@ -29,20 +29,36 @@
     </tr>
     </table>
 
+
     <p>Categories</p>
+
+    <button v-if="!addingNewCategory" v-on:click="newCategory">New location</button>
+    
+    <div v-if="addingNewCategory">
+    <br>
+    <div>
+      <form>
+        <label>New Category
+          <input type="text" id="categoryName" v-model="newCategoryName" placeholder="Name"/>
+          <input type="color"  id="categoryColor" v-model="newCategoryColor"/> 
+
+        </label>
+      <br>
+      <button type="button" v-on:click="addCategory">Add</button>
+    <button type="button" v-on:click="cancelNewCategory">Cancel</button> 
+      </form>
+    </div>
+    </div>
     <table>
-    <tr v-for="category in categories" :key="category.properties.pk" >
+    <tr v-for="category in categories" :key="category.fields.pk" >
     <td >
-        {{  category.properties.name }}
-    </td>
-    <td>
-   // <input type="checkbox"  :value=category.properties.pk v-model="checkedLocations">
-    </td>
-    <td>
-       <button v-on:click="editCategory">Edit</button>
+    {{  category.fields.name }}
+      <button type="button" v-on:click="addCategory">Add</button>
 
     </td>
+
     </tr>
+  
     </table>
     
   </div>
@@ -61,6 +77,10 @@ export default {
             locations: [],
             checkedLocations: [],
             categories : [],
+            addingNewCategory: false,
+            newCategoryName: '',
+            newCategoryColor: '#a46fe2',
+            parentCategory: null,
         };
     },
 
@@ -72,6 +92,7 @@ export default {
     },
     mounted() {
         this.getAllLocations();
+        this.getAllCategories();
         
     },
     methods: {
@@ -98,22 +119,54 @@ export default {
         editLocation: function () {
         },
 
+        newCategory: function (){
+            this.addingNewCategory = true;
+        },
+
+        addCategory: function () {
+            axios.post( 'http://localhost:8000/mapVisual/new-category/',
+                        JSON.stringify( {
+                            name: this.newCategoryName,
+                            color: this.newCategoryColor,
+                            parent: this.parentCategory,
+                        }),
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                      ).then(function() {
+
+                          console.log('Success!');
+                      }).catch(function() {
+                          console.log('Failure!');
+                      });
+        },
+        cancelNewCategory: function () {
+            this.addingNewCategory = false;
+            
+        },
+
         getAllCategories: function () {
             console.log("getAllCategories");
             axios.get('http://localhost:8000/mapVisual/all-categories/'
                      ).then(resp => {
-                         console.log(JSON.parse(resp.data));
+                       this.categories = [];
+                         let data = JSON.parse(resp.data);
+                         this.categories = data;
+  
                      }).catch(function() {
                                         console.log('Failure!');
                      })
         },
-
     },
+    
     created() {
         
         EventBus.$on('locationAdded', this.getAllLocations);
     },
 }
+
 </script>
 
 <style>
