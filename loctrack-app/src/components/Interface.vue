@@ -3,13 +3,10 @@
 <template>
     <div id="interface">
 
-        <div class="cell cell-map">
+        <div class=" cell-map">
     <map-container /> 
         </div>
-        <div class="cell cell-edit">
-            <controls />
-        </div>
-        <div class="cell cell-options">
+        <div class=" cell-edit">
             <options/>
 
         </div>
@@ -21,14 +18,12 @@
 
 <script>
  import  MapContainer  from './MapContainer.vue'
- import  Controls  from './Controls.vue'
  import Options from './Options.vue'
 
  export default {
      name: 'Interface',
      components: {
          MapContainer,
-         Controls,
          Options,
      },
      
@@ -57,24 +52,26 @@
      
  }
 
- .cell {
-     border-radius: 4px;
-     background-color: lightgrey;
- }
 
  .cell-map {
      grid-column: 1;
      grid-row-start: 1;
      grid-row-end: 3;
+          border-radius: 4px;
+     background-color: lightgrey
  }
 
  .cell-edit {
      grid-column: 2;
      grid-row: 1;
- }
+
+      border-radius: 4px;
+     background-color: lightgrey;}
 
  .cell-options {
      grid-column: 2;
      grid-row: 2;
+          border-radius: 4px;
+     background-color: lightgrey;
  }
 </style>

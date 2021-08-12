@@ -25,7 +25,7 @@ def get_file(request, file_name):
 
     return response
 
-def get_track_points(request):
+def trackpoints(request):
 
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
@@ -63,21 +63,21 @@ def add_new_location(request):
     req_json = json.loads(request.body)
 
     coords = json.loads(request.body)['polygon']['geometry']['coordinates'][0]
-    print("coords: \n", coords)
     coords.append(coords[0])
-    coords_tuple = tuple(json.loads(request.body)['polygon']['geometry']['coordinates'][0])
-    print("coords tuple", coords_tuple)
+    print(req_json['categoryID'])
+    category_object = Category.objects.get(id=int(req_json['categoryID']))
 
-    
-    l = Location(name=req_json['name'],
-                 category=null,#req_json['category'],
+    location = Location(name=req_json['name'],
+                 category=category_object,
                  time_until_visited=int(req_json['timeUntilVisited']),
                  color=req_json['color'],
                  polygon=Polygon(coords))
 
-    l.save()
+    location.save()
                                              
     return HttpResponse(status=200)
+
+
 
 def get_all_locations(request):
     locations = Location.objects.all()
@@ -87,8 +87,34 @@ def get_all_locations(request):
 
 def all_categories(request):
     categories = Category.objects.all()
-    print("lsdkjflsdjflksjdlfjlsdjfljsdfjsdlfjlsdajdf", categories)
     categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent_id'))
     return JsonResponse(categories_serialized, safe=False)
 
-                                      
+def child_categories(request):
+    category_id = request.GET.get('categoryID')
+    categories = Category.objects.filter(parent_category=category_id)
+    categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent_id'))
+
+    return JsonResponse(categories_serialized, safe=False)
+
+def new_category(request):
+    req_json = json.loads(request.body)
+    if req_json['parent'] != None:
+        parent_object = Category.objects.get(id=int(req_json['parent']))
+        new_category = Category(name=req_json['name'],
+                                color=req_json['color'],
+                                parent_category=parent_object)
+    else:
+        new_category = Category(name=req_json['name'],
+                                color=req_json['color'],
+                               )# parent_category=parent_object)
+    new_category.save()
+    return HttpResponse(status=200)
+
+def remove_category(request):
+    category_id = json.loads(request.body)['categoryID']
+    print(category_id)
+    category = Category.objects.get(pk=category_id)
+    category.delete()
+
+    return HttpResponse(status=200)

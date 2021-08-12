@@ -1,15 +1,6 @@
 
 <template>
     <div>
-     <br><br>
-        <div class="large-12 medium-12 small-12 ">
-          <label>File upload
-            <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
-          </label>
-    <button v-on:click="submitFiles">Submit</button>
-    
-    </div>
-    <br>
     <div >
     <button v-if="!newLocation" v-on:click="createNewLocation">New location</button>
     </div>
@@ -44,7 +35,7 @@ import axios from 'axios';
 import EventBus from '../event-bus';
 
 export default {
-    name: 'Controls',
+    name: 'NewLocation',
 
     mounted() {
         this.getAllCategories();
@@ -142,7 +133,6 @@ export default {
     },
     data() {
       return {
-          files: '',
           newLocation: false,
           newLocationColor: '#5186db',
           newLocationName: '',

@@ -116,7 +116,7 @@ export default {
         
         getData: async (date1, date2) => {
             
-            let url = new URL('http://localhost:8000/mapVisual/get-trackpoints');
+            let url = new URL('http://localhost:8000/mapVisual/trackpoints');
             url.search = new URLSearchParams( {start: date1, end: date2 });
             let response = await fetch(url);
             let data = await response.json();

@@ -1,6 +1,13 @@
 <template>
 
   <div>
+    <div class="large-12 medium-12 small-12 ">
+          <h3>File upload</h3>
+            <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
+    <button v-on:click="submitFiles">Submit</button>
+    
+</div>
+    <h3>Show dates</h3>
 
         <p>From:</p>
           <input type="date" v-model="fromDate">
@@ -9,11 +16,13 @@
 
         <button v-on:click="getDate">Go</button>
    
-    <p>Opacity</p>
+    <h3>Opacity</h3>
     <div>
   <input type="range" min="1" max="10" value="5" class="slider" id="opacityRange" ref="sliderValue"  v-on:change="changeOpacity()">
     </div>
-    <p>Locations</p>
+    
+    <h3>Locations</h3>
+    <new-location/>
     <table>
     <tr v-for="location in locations" :key="location.properties.pk" >
     <td >
@@ -30,7 +39,7 @@
     </table>
 
 
-    <p>Categories</p>
+    <h3>Categories</h3>
     <category-item v-bind:parentID="null"/>
     <add-category-button v-bind:parentID="null"/>
     <remove-category-button v-bind:parentID="null"/>
@@ -46,16 +55,18 @@ import axios from 'axios';
 import CategoryItem from './CategoryItem.vue'
 import AddCategoryButton from './AddCategoryButton.vue'
 import RemoveCategoryButton from './RemoveCategoryButton.vue'
+import NewLocation from './NewLocation.vue'
+
 
 
 export default {
     name: 'Options',
     components: {
-	'category-item': CategoryItem,
-	'add-category-button': AddCategoryButton,
-	'remove-category-button': RemoveCategoryButton,
-
-	
+        'category-item': CategoryItem,
+        'add-category-button': AddCategoryButton,
+        'remove-category-button': RemoveCategoryButton,
+	'new-location': NewLocation,
+        
     },
     data: function() {
         return {
@@ -64,6 +75,9 @@ export default {
             locations: [],
             checkedLocations: [],
             parentCategory: null,
+
+            files: '',
+
 
         };
     },
@@ -102,18 +116,34 @@ export default {
         editLocation: function () {
         },
 
-        getAllCategories: function () {
-            console.log("getAllCategories");
-            axios.get('http://localhost:8000/mapVisual/all-categories/'
-                     ).then(resp => {
-                         this.categories = [];
-                         let data = JSON.parse(resp.data);
-                         this.categories = data;
-                         
-                     }).catch(function() {
-                         console.log('Failure!');
-                     })
-        },     
+	handleFileUpload: function () {
+            this.files = this.$refs.files.files;	    
+        },
+	
+        submitFiles: function () {
+            let formData = new FormData();
+            for ( let i = 0; i < this.files.length; i++ ) {
+                let file = this.files[i];
+                formData.append(this.files[i].name, file);
+            }
+
+            axios.post( 'http://localhost:8000/mapVisual/import-data-gpx/',
+                        formData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                      ).then(function() {
+                          console.log('Success!');
+                      }).catch(function() {
+                          console.log('Failure!');
+                      });
+                                      
+        },
+
+
+
         
     },
     
