@@ -31,35 +31,11 @@
 
 
     <p>Categories</p>
+    <category-item v-bind:parentID="null"/>
+    <add-category-button v-bind:parentID="null"/>
+    <remove-category-button v-bind:parentID="null"/>
 
-    <button v-if="!addingNewCategory" v-on:click="newCategory">New location</button>
-    
-    <div v-if="addingNewCategory">
-    <br>
-    <div>
-      <form>
-        <label>New Category
-          <input type="text" id="categoryName" v-model="newCategoryName" placeholder="Name"/>
-          <input type="color"  id="categoryColor" v-model="newCategoryColor"/> 
 
-        </label>
-      <br>
-      <button type="button" v-on:click="addCategory">Add</button>
-    <button type="button" v-on:click="cancelNewCategory">Cancel</button> 
-      </form>
-    </div>
-    </div>
-    <table>
-    <tr v-for="category in categories" :key="category.fields.pk" >
-    <td >
-    {{  category.fields.name }}
-      <button type="button" v-on:click="addCategory">Add</button>
-
-    </td>
-
-    </tr>
-  
-    </table>
     
   </div>
 </template>
@@ -67,20 +43,28 @@
 <script>
 import EventBus from '../event-bus';
 import axios from 'axios';
+import CategoryItem from './CategoryItem.vue'
+import AddCategoryButton from './AddCategoryButton.vue'
+import RemoveCategoryButton from './RemoveCategoryButton.vue'
+
 
 export default {
     name: 'Options',
+    components: {
+	'category-item': CategoryItem,
+	'add-category-button': AddCategoryButton,
+	'remove-category-button': RemoveCategoryButton,
+
+	
+    },
     data: function() {
         return {
             fromDate: '',
             toDate: '',
             locations: [],
             checkedLocations: [],
-            categories : [],
-            addingNewCategory: false,
-            newCategoryName: '',
-            newCategoryColor: '#a46fe2',
             parentCategory: null,
+
         };
     },
 
@@ -92,7 +76,6 @@ export default {
     },
     mounted() {
         this.getAllLocations();
-        this.getAllCategories();
         
     },
     methods: {
@@ -119,46 +102,19 @@ export default {
         editLocation: function () {
         },
 
-        newCategory: function (){
-            this.addingNewCategory = true;
-        },
-
-        addCategory: function () {
-            axios.post( 'http://localhost:8000/mapVisual/new-category/',
-                        JSON.stringify( {
-                            name: this.newCategoryName,
-                            color: this.newCategoryColor,
-                            parent: this.parentCategory,
-                        }),
-                        {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        }
-                      ).then(function() {
-
-                          console.log('Success!');
-                      }).catch(function() {
-                          console.log('Failure!');
-                      });
-        },
-        cancelNewCategory: function () {
-            this.addingNewCategory = false;
-            
-        },
-
         getAllCategories: function () {
             console.log("getAllCategories");
             axios.get('http://localhost:8000/mapVisual/all-categories/'
                      ).then(resp => {
-                       this.categories = [];
+                         this.categories = [];
                          let data = JSON.parse(resp.data);
                          this.categories = data;
-  
+                         
                      }).catch(function() {
-                                        console.log('Failure!');
+                         console.log('Failure!');
                      })
-        },
+        },     
+        
     },
     
     created() {
