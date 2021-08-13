@@ -1,6 +1,6 @@
 <template>
-  <div>
- <button v-if="!addingNewCategory" v-on:click="newCategory">Add Category</button>
+  <span>
+ <button v-if="!addingNewCategory" v-on:click="newCategory">Add</button>
     
     <div v-if="addingNewCategory">
     <br>
@@ -14,7 +14,7 @@
       </form>
     </div>
     </div>
-</div>
+</span>
 </template>
 
 <script>

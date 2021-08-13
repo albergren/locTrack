@@ -58,7 +58,7 @@ export default {
 
         addNewLocation: function () {
             let context = this;
-            axios.post( 'http://localhost:8000/mapVisual/add-new-location/',
+            axios.post( 'http://localhost:8000/mapVisual/new-location/',
                         JSON.stringify( {
                             name: this.newLocationName,
                             categoryID: this.newLocationCategoryID,

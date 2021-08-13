@@ -11,19 +11,6 @@ import os
 
 from django.template import loader
 
-def index(request):
-
-    template = loader.get_template('mapVisual/index.html')
-
-    return HttpResponse(template.render(context, request))
-
-
-def get_file(request, file_name):
-
-    path = os.path.join(settings.BASE_DIR, 'mapVisual')
-    response = FileResponse(open(path + '/static/mapVisual/' + file_name + '.geojson', 'rb'))
-
-    return response
 
 def trackpoints(request):
 
@@ -59,7 +46,7 @@ def import_data_gpx(request):
 
     return HttpResponse(status=200)
 
-def add_new_location(request):
+def new_location(request):
     req_json = json.loads(request.body)
 
     coords = json.loads(request.body)['polygon']['geometry']['coordinates'][0]
@@ -79,7 +66,7 @@ def add_new_location(request):
 
 
 
-def get_all_locations(request):
+def all_locations(request):
     locations = Location.objects.all()
     locations_serialized = serialize('geojson', locations ,geometry_field='polygon',fields=('pk','name','color'))
     return JsonResponse(locations_serialized, safe=False)

@@ -1,9 +1,9 @@
 <template>
-  <div>
- <button  v-on:click="removeCategory">Remove Category</button>
+  <span>
+ <button  v-on:click="removeCategory">Remove</button>
     
   
-</div>
+</span>
 </template>
 
 <script>

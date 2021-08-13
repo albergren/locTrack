@@ -68,10 +68,4 @@
       border-radius: 4px;
      background-color: lightgrey;}
 
- .cell-options {
-     grid-column: 2;
-     grid-row: 2;
-          border-radius: 4px;
-     background-color: lightgrey;
- }
 </style>

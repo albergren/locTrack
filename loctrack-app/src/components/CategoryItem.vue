@@ -1,24 +1,16 @@
 <template>
-    <div>
+    <span>
+       <ul>
+           <li v-for="category in categories" :key="category.fields.pk" >
     
+               {{  category.fields.name }}
+               <add-category-button v-bind:parentID="category.pk"/>
+               <remove-category-button v-bind:categoryID="category.pk"/>
+               <category-item v-bind:parentID="category.pk"/>
 
-    <ul>
-    <li v-for="category in categories" :key="category.fields.pk" >
-    
-    {{  category.fields.name }}
-
-    
-    <add-category-button v-bind:parentID="category.pk"/>
-    <remove-category-button v-bind:categoryID="category.pk"/>
-
-    <category-item v-bind:parentID="category.pk"/>
-
-    </li>
-
-</ul>
-    
-  
-</div>
+           </li>
+       </ul>   
+    </span>
 </template>
 
 <script>
@@ -30,8 +22,8 @@ import RemoveCategoryButton from './RemoveCategoryButton.vue'
   export default {
       name: 'CategoryItem',
       components: {
-	'add-category-button': AddCategoryButton,
-	'remove-category-button': RemoveCategoryButton,
+  'add-category-button': AddCategoryButton,
+  'remove-category-button': RemoveCategoryButton,
 
       },
       props: [
@@ -44,7 +36,7 @@ import RemoveCategoryButton from './RemoveCategoryButton.vue'
       },
 
       mounted() {
-	this.getChildCategories(this.parentID);
+  this.getChildCategories(this.parentID);
         
       },
       

@@ -1,51 +1,47 @@
 <template>
 
-  <div>
-    <div class="large-12 medium-12 small-12 ">
-          <h3>File upload</h3>
-            <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
-    <button v-on:click="submitFiles">Submit</button>
+    <div>
+        <div class="large-12 medium-12 small-12 ">
+            <h3>File upload</h3>
+                <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
+                <button v-on:click="submitFiles">Submit</button>
     
-</div>
-    <h3>Show dates</h3>
-
+        </div>
+        <h3>Show dates</h3>
         <p>From:</p>
-          <input type="date" v-model="fromDate">
+            <input type="date" v-model="fromDate">
         <p>To:</p>
-        <input type="date" v-model="toDate">
-
+            <input type="date" v-model="toDate">
         <button v-on:click="getDate">Go</button>
    
-    <h3>Opacity</h3>
-    <div>
-  <input type="range" min="1" max="10" value="5" class="slider" id="opacityRange" ref="sliderValue"  v-on:change="changeOpacity()">
-    </div>
+        <h3>Opacity</h3>
+        <div>
+            <input type="range" min="1" max="10" value="5" class="slider" id="opacityRange" ref="sliderValue"  v-on:change="changeOpacity()">
+        </div>
     
-    <h3>Locations</h3>
-    <new-location/>
-    <table>
-    <tr v-for="location in locations" :key="location.properties.pk" >
-    <td >
-        {{  location.properties.name }}
-    </td>
-    <td>
-    <input type="checkbox"  :value=location.properties.pk v-model="checkedLocations">
-    </td>
-    <td>
-       <button v-on:click="editLocation">Edit</button>
+        <h3>Locations</h3>
+        <new-location/>
+        <table>
+            <tr v-for="location in locations" :key="location.properties.pk" >
+                <td >
+                    {{  location.properties.name }}
+                </td>
+                <td>
+                    <input type="checkbox"  :value=location.properties.pk v-model="checkedLocations">
+                </td>
+                <td>
+                    <button v-on:click="editLocation">Edit</button>
 
-    </td>
-    </tr>
-    </table>
-
-
-    <h3>Categories</h3>
-    <category-item v-bind:parentID="null"/>
-    <add-category-button v-bind:parentID="null"/>
-    <remove-category-button v-bind:parentID="null"/>
+                </td>
+            </tr>
+        </table>
 
 
-    
+        <h3>Categories</h3>
+        <category-item v-bind:parentID="null"/>
+        <add-category-button v-bind:parentID="null"/>
+        <remove-category-button v-bind:parentID="null"/>
+
   </div>
 </template>
     
@@ -102,7 +98,7 @@ export default {
         getAllLocations: function () {
             console.log("getAllLocations");
             
-            axios.get( 'http://localhost:8000/mapVisual/get-all-locations/'
+            axios.get( 'http://localhost:8000/mapVisual/all-locations/'
                      ).then(resp =>  {
                          this.locations = [];
                          let data = JSON.parse(resp.data);              
