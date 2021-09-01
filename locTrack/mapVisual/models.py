@@ -2,6 +2,20 @@ from django.contrib.gis.db import models
 
 # Create your models here.
 
+class TrackPointManager(models.Manager):
+
+    def create_trackpoint(self, point):
+        try:
+            point = self.create(timestamp=point.time,
+                                point=Point(point.longitude, point.latitude),
+                                elevation=point.elevation,
+                                speed=point.speed)
+        except Exception:
+            error_msg= ("Invalid data in trackpoint!")
+            print(error_msg)
+        
+    
+
 class TrackPoint(models.Model):
     timestamp = models.DateTimeField()
     point = models.PointField(geography=True)

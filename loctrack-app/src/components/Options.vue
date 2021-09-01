@@ -3,7 +3,7 @@
     <div>
         <div class="large-12 medium-12 small-12 ">
             <h3>File upload</h3>
-                <input type="file" id="files" ref="files" multiple v-on:change="handleFileUpload()"/>
+    <input type="file" id="files" ref="files" accept=".gpx" multiple v-on:change="handleFileUpload()"/>
                 <button v-on:click="submitFiles">Submit</button>
     
         </div>

@@ -3,7 +3,9 @@ from django.http import FileResponse, JsonResponse, HttpResponse
 from django.conf import settings
 from django.core.serializers import serialize
 from .models import TrackPoint, Location, Category
-from django.contrib.gis.geos import Point, Polygon
+
+from django.contrib.gis.geos import Polygon
+from .serializers import CategorySerializer
 import json
 
 import gpxpy
@@ -33,7 +35,6 @@ def import_data_gpx(request):
         for track in gpx.tracks:
             for segment in track.segments:
                 for point in segment.points:
-                    
                     print('Point at ({0},{1}) -> {2} at time {3}'
                           .format(point.latitude, point.latitude, point.elevation, point.time))
 
@@ -73,8 +74,10 @@ def all_locations(request):
 
 
 def all_categories(request):
+    
     categories = Category.objects.all()
-    categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent_id'))
+    categories_serialized = CategorySerializer(categories)
+    #categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent_id'))
     return JsonResponse(categories_serialized, safe=False)
 
 def child_categories(request):
