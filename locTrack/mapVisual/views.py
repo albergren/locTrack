@@ -3,9 +3,8 @@ from django.http import FileResponse, JsonResponse, HttpResponse
 from django.conf import settings
 from django.core.serializers import serialize
 from .models import TrackPoint, Location, Category
-
+from collections import defaultdict
 from django.contrib.gis.geos import Polygon
-from .serializers import CategorySerializer
 import json
 
 import gpxpy
@@ -75,15 +74,15 @@ def all_locations(request):
 
 def all_categories(request):
     
-    categories = Category.objects.all()
-    categories_serialized = CategorySerializer(categories)
-    #categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent_id'))
+    categories = Category.objects.all() 
+    categories_serialized = serialize('json', categories, fields=('pk', 'name','color','parent'))
+  
     return JsonResponse(categories_serialized, safe=False)
-
+    
 def child_categories(request):
     category_id = request.GET.get('categoryID')
-    categories = Category.objects.filter(parent_category=category_id)
-    categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent_id'))
+    categories = Category.objects.filter(parent=category_id)
+    categories_serialized = serialize('json', categories, fields=('pk', 'name','color', 'parent'))
 
     return JsonResponse(categories_serialized, safe=False)
 
@@ -93,11 +92,11 @@ def new_category(request):
         parent_object = Category.objects.get(id=int(req_json['parent']))
         new_category = Category(name=req_json['name'],
                                 color=req_json['color'],
-                                parent_category=parent_object)
+                                parent=parent_object)
     else:
         new_category = Category(name=req_json['name'],
                                 color=req_json['color'],
-                               )# parent_category=parent_object)
+                               )
     new_category.save()
     return HttpResponse(status=200)
 

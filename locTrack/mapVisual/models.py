@@ -1,5 +1,4 @@
 from django.contrib.gis.db import models
-
 # Create your models here.
 
 class TrackPointManager(models.Manager):
@@ -34,4 +33,4 @@ class Location(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50)
     color = models.CharField(max_length=7)
-    parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
