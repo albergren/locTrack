@@ -1,15 +1,22 @@
 <template>
     <span>
-       <ul>
-           <li v-for="category in categories" :key="category.fields.pk" >
-    
-               {{  category.fields.name }}
-               <add-category-button v-bind:parentID="category.pk"/>
-               <remove-category-button v-bind:categoryID="category.pk"/>
-               <category-item v-bind:parentID="category.pk"/>
+    <div>
+    <span @click="toggleChildren"> {{ categoryName  }} </span>
+    <remove-category-button v-bind:categoryID="categoryID"/>
 
-           </li>
-       </ul>   
+</div>
+            <ul v-if="showChildren">       
+                <li v-for="category in categories" :key="category.pk" >
+                    <div  @click="toggleChildren(category.pk)"> {{  category.fields.name }}</div>
+                        <category-item v-bind:parentID="category.pk" />
+     
+</li>
+    <li>
+           <add-category-button v-bind:parentID="categoryID"/>
+     
+    </li>
+           </ul>
+
     </span>
 </template>
 
@@ -27,22 +34,23 @@ import RemoveCategoryButton from './RemoveCategoryButton.vue'
 
       },
       props: [
-          'parentID'
+          'categoryID', 'categoryName' 
       ],
       data: function () {
           return {
-          categories : [],
+              categories : [],
+              showChildren: false,
           };
       },
 
       mounted() {
-  this.getChildCategories(this.parentID);
-        
+          this.getChildCategories(this.categoryID);
       },
+
       
       methods: {
 
-          getChildCategories: function (id) {            
+          getChildCategories: function (id) {
               axios.get('http://localhost:8000/mapVisual/child-categories', {params: {  categoryID: id }}
                        ).then(resp => {
                            let data = JSON.parse(resp.data);
@@ -51,6 +59,11 @@ import RemoveCategoryButton from './RemoveCategoryButton.vue'
                            console.log('Failure!');
                        });
           },
+          
+          toggleChildren() {
+              this.showChildren = !this.showChildren;
+          }
+
 
       
       },

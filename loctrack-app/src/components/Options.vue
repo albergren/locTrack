@@ -36,12 +36,22 @@
             </tr>
         </table>
 
+  
 
-        <h3>Categories</h3>
-        <category-item v-bind:parentID="null"/>
+    
+    <div  @click="toggleChildren"><h3>Categories</h3></div>
+        <ul  v-if="showChildren">
+            <li v-for="category in categories" :key="category.pk" >
+                <category-item v-bind:categoryID="category.pk" v-bind:categoryName="category.fields.name"/>
+            </li>
+    <li>
+            <add-category-button v-bind:parentID="null"/>
+
+    </li>
+<!---    <category-item v-bind:parentID="null" v-bind:showChildren="true"/>
         <add-category-button v-bind:parentID="null"/>
-        <remove-category-button v-bind:parentID="null"/>
-
+        <remove-category-button v-bind:parentID="null"/> --->
+    </ul>
   </div>
 </template>
     
@@ -50,31 +60,31 @@ import EventBus from '../event-bus';
 import axios from 'axios';
 import CategoryItem from './CategoryItem.vue'
 import AddCategoryButton from './AddCategoryButton.vue'
-import RemoveCategoryButton from './RemoveCategoryButton.vue'
+//import RemoveCategoryButton from './RemoveCategoryButton.vue'
 import NewLocation from './NewLocation.vue'
 
 
-
 export default {
+
     name: 'Options',
     components: {
         'category-item': CategoryItem,
         'add-category-button': AddCategoryButton,
-        'remove-category-button': RemoveCategoryButton,
+//        'remove-category-button': RemoveCategoryButton,
 	'new-location': NewLocation,
-        
     },
     data: function() {
+        
         return {
             fromDate: '',
             toDate: '',
             locations: [],
             checkedLocations: [],
             parentCategory: null,
-
+            categories: [],
             files: '',
-
-
+            showChildren: false,
+                     
         };
     },
 
@@ -86,7 +96,7 @@ export default {
     },
     mounted() {
         this.getAllLocations();
-        
+        this.getChildCategories(null);
     },
     methods: {
         changeOpacity: function () {
@@ -108,6 +118,16 @@ export default {
                          console.log('Failure!');
                      })
         },
+
+        getChildCategories: function (id) {            
+        axios.get('http://localhost:8000/mapVisual/child-categories', {params: {  categoryID: id }}
+                       ).then(resp => {
+                           let data = JSON.parse(resp.data);
+                           this.categories = data;                           
+                       }).catch(function() {
+                           console.log('Failure!');
+                       });
+    },
         
         editLocation: function () {
         },
@@ -138,7 +158,9 @@ export default {
                                       
         },
 
-
+        toggleChildren() {
+              this.showChildren = !this.showChildren;
+          }
 
         
     },

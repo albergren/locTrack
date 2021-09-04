@@ -47,6 +47,9 @@ def import_data_gpx(request):
     return HttpResponse(status=200)
 
 def new_location(request):
+    # TODO: validation of input
+    # TODO: exception on record creation
+    
     req_json = json.loads(request.body)
 
     coords = json.loads(request.body)['polygon']['geometry']['coordinates'][0]
