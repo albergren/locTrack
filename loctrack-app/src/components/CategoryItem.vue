@@ -7,12 +7,11 @@
 </div>
             <ul v-if="showChildren">       
                 <li v-for="category in categories" :key="category.pk" >
-                    <div  @click="toggleChildren(category.pk)"> {{  category.fields.name }}</div>
-                        <category-item v-bind:parentID="category.pk" />
+                        <category-item v-bind:categoryID="category.pk"  v-bind:categoryName="category.fields.name"/>
      
 </li>
     <li>
-           <add-category-button v-bind:parentID="categoryID"/>
+           <add-category-button v-bind:categoryID="categoryID"/>
      
     </li>
            </ul>

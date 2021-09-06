@@ -47,7 +47,6 @@ export default {
     name: 'Controls',
 
     mounted() {
-        this.getAllCategories();
         
     },
     methods: {
@@ -126,7 +125,7 @@ export default {
                       });
                                       
         },
-
+/**
         getAllCategories: function () {
             console.log("getAllCategories");
             axios.get('http://localhost:8000/mapVisual/all-categories/'
@@ -139,6 +138,7 @@ export default {
                          console.log('Failure!');
                      })
         },     
+*/
     },
     data() {
       return {

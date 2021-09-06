@@ -23,7 +23,7 @@
   export default {
       name: 'AddCategoryButton',
       props: [
-          'parentID'
+          'categoryID'
       ],
       data: function () {
           return {
@@ -44,7 +44,7 @@
                         JSON.stringify( {
                             name: this.newCategoryName,
                             color: this.newCategoryColor,
-                            parent: this.parentID,
+                            parent: this.categoryID,
                         }),
                         {
                             headers: {
