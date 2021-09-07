@@ -1,4 +1,6 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
+
 # Create your models here.
 
 class TrackPointManager(models.Manager):
@@ -21,6 +23,7 @@ class TrackPoint(models.Model):
     elevation = models.FloatField()
     speed = models.FloatField(null=True)
 
+    objects = TrackPointManager()
 
 class Location(models.Model):
     name = models.CharField(max_length=50)

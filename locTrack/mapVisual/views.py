@@ -37,12 +37,7 @@ def import_data_gpx(request):
                     print('Point at ({0},{1}) -> {2} at time {3}'
                           .format(point.latitude, point.latitude, point.elevation, point.time))
 
-                    p = TrackPoint(timestamp=point.time,
-                                   point=Point(point.longitude, point.latitude),
-                                   elevation=point.elevation,
-                                   speed=point.speed)
-
-                    p.save()
+                    TrackPoint.objects.create_trackpoint(point)
 
     return HttpResponse(status=200)
 
@@ -98,8 +93,8 @@ def new_category(request):
                                 parent=parent_object)
     else:
         new_category = Category(name=req_json['name'],
-                                color=req_json['color'],
-                               )
+                                color=req_json['color'])
+
     new_category.save()
     return HttpResponse(status=200)
 
