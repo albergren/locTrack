@@ -1,12 +1,10 @@
 <template>
 
     <div>
-        <div class="large-12 medium-12 small-12 ">
             <h3>File upload</h3>
     <input type="file" id="files" ref="files" accept=".gpx" multiple v-on:change="handleFileUpload()"/>
-                <button v-on:click="submitFiles">Submit</button>
+                <br><button v-on:click="submitFiles">Submit</button>
     
-        </div>
         <h3>Show dates</h3>
         <p>From:</p>
             <input type="date" v-model="fromDate">
@@ -39,19 +37,16 @@
   
 
     
-    <div  @click="toggleChildren"><h3>Categories</h3></div>
-        <ul  v-if="showChildren">
-            <li v-for="category in categories" :key="category.pk" >
+    <div class="button" @click="toggleChildren"><h3>Categories</h3></div>
+        <div  v-if="showChildren">
+    <div v-for="category in categories" :key="category.pk" >
                 <category-item v-bind:categoryID="category.pk" v-bind:categoryName="category.fields.name"/>
-            </li>
-    <li>
-            <add-category-button v-bind:parentID="null"/>
+</div>
+    <div>
+            <add-category-button v-bind:categoryID="null"/>
 
-    </li>
-<!---    <category-item v-bind:parentID="null" v-bind:showChildren="true"/>
-        <add-category-button v-bind:parentID="null"/>
-        <remove-category-button v-bind:parentID="null"/> --->
-    </ul>
+    </div>
+    </div>
   </div>
 </template>
     
@@ -60,7 +55,6 @@ import EventBus from '../event-bus';
 import axios from 'axios';
 import CategoryItem from './CategoryItem.vue'
 import AddCategoryButton from './AddCategoryButton.vue'
-//import RemoveCategoryButton from './RemoveCategoryButton.vue'
 import NewLocation from './NewLocation.vue'
 
 
@@ -70,7 +64,6 @@ export default {
     components: {
         'category-item': CategoryItem,
         'add-category-button': AddCategoryButton,
-//        'remove-category-button': RemoveCategoryButton,
 	'new-location': NewLocation,
     },
     data: function() {
@@ -174,6 +167,38 @@ export default {
 </script>
 
 <style>
+    .button {
+	background-color: #4CAF50; /* Green */
+	border: none;
+	width: 100%;
+	color: white;
+	text-align: left;
+	
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	padding-left:10px;
+	box-sizing:border-box;
+	cursor: pointer;
+    }
 
+    .subbutton {
+	background-color: darkgrey; /* Green */
+	border: solid;
+	border-width: 1px;
+	border-color: #ffffff;
+	width: 100%;
+	color: white;
+	text-align: left;
+	
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	padding: 10px;
+	padding-left:10px;
+
+	box-sizing:border-box;
+	cursor: pointer;
+    }
 </style>
 

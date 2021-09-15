@@ -1,20 +1,25 @@
 <template>
     <span>
     <div>
-    <span @click="toggleChildren"> {{ categoryName  }} </span>
+    <span class="subbutton" @click="toggleChildren"> {{ categoryName  }}
+
+    <div style="float:right">
     <remove-category-button v-bind:categoryID="categoryID"/>
+    </div>
+        <div style="float:right">
+           <add-category-button v-bind:categoryID="categoryID"/>
+    
+</div>
+</span>
 
 </div>
-            <ul v-if="showChildren">       
-                <li v-for="category in categories" :key="category.pk" >
+            <div v-if="showChildren">       
+                <div v-for="category in categories" :key="category.pk" >
                         <category-item v-bind:categoryID="category.pk"  v-bind:categoryName="category.fields.name"/>
      
-</li>
-    <li>
-           <add-category-button v-bind:categoryID="categoryID"/>
-     
-    </li>
-           </ul>
+</div>
+
+           </div>
 
     </span>
 </template>
@@ -44,6 +49,7 @@ import RemoveCategoryButton from './RemoveCategoryButton.vue'
 
       mounted() {
           this.getChildCategories(this.categoryID);
+          console.log(this.categoryID);
       },
 
       
