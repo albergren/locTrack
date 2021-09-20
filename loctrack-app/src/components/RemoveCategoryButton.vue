@@ -1,6 +1,6 @@
 <template>
   <span>
- <button  v-on:click="removeCategory">Remove</button>
+ <button  v-on:click="removeCategory">  <font-awesome-icon icon="trash-alt" /></button>
     
   
 </span>

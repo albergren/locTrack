@@ -1,6 +1,7 @@
 <template>
   <span>
- <button v-if="!addingNewCategory" v-on:click="newCategory">Add</button>
+ <button v-if="!addingNewCategory" v-on:click="newCategory">    <font-awesome-icon icon="plus" />
+</button>
     
     <div v-if="addingNewCategory">
     <br>
