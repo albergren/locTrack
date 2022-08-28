@@ -199,7 +199,7 @@ export default {
         this.geojsonLayer = L.geoJSON("").addTo(this.mymap);
         this.locationPolygon = L.polygon(this.latlngs, {fillColor: this.locationPolygonColor,
                                                         weight:0.1}).addTo(this.mymap);
-	this.locationsLayer = new L.FeatureGroup().addTo(this.mymap);
+        this.locationsLayer = new L.FeatureGroup().addTo(this.mymap);
     },
 }
 </script>

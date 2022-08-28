@@ -93,30 +93,7 @@ export default {
                 
         },
 
-        handleFileUpload: function () {
-            this.files = this.$refs.files.files;	    
-        },
-        submitFiles: function () {
-            let formData = new FormData();
-            for ( let i = 0; i < this.files.length; i++ ) {
-                let file = this.files[i];
-                formData.append(this.files[i].name, file);
-            }
-
-            axios.post( 'http://localhost:8000/mapVisual/import-data-gpx/',
-                        formData,
-                        {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        }
-                      ).then(function() {
-                          console.log('Success!');
-                      }).catch(function() {
-                          console.log('Failure!');
-                      });
-                                      
-        },
+    
 
         getAllCategories: function () {
             console.log("getAllCategories");

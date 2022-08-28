@@ -14,7 +14,6 @@ from django.template import loader
 
 
 def trackpoints(request):
-
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
 

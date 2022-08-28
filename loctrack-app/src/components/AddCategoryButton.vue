@@ -41,6 +41,8 @@
         },
 
           addCategory: function () {
+              let context = this;
+
             axios.post( 'http://localhost:8000/mapVisual/new-category/',
                         JSON.stringify( {
                             name: this.newCategoryName,
@@ -53,10 +55,12 @@
                             }
                         }
                       ).then(function() {
+                          context.$emit('categoryAdded');
 
                           console.log('Success!');
                       }).catch(function() {
-                          console.log('Failure!');
+
+                          console.log('Failure!1');
                       });
         },
         cancelNewCategory: function () {

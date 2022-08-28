@@ -6,6 +6,8 @@ import { faUserSecret,
          faPlus,
          faTrashAlt,
          faEdit,
+         faChevronRight,
+         faChevronDown
        } from '@fortawesome/free-solid-svg-icons'
 
 
@@ -13,7 +15,10 @@ import { faUserSecret,
 library.add(faUserSecret,
             faPlus,
             faTrashAlt,
-            faEdit);
+            faEdit,
+            faChevronRight,
+            faChevronDown
+           );
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

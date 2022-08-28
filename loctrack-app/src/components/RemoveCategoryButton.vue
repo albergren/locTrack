@@ -20,18 +20,19 @@
       },
       methods: {
           removeCategory: function () {
-              console.log(this.categoryID);
+              
+              let context = this;
               axios.post( 'http://localhost:8000/mapVisual/remove-category/',
                           JSON.stringify( {
                               categoryID: this.categoryID,
                           }),
-                        {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        }
+                          {
+                              headers: {
+                                  'Content-Type': 'multipart/form-data'
+                              }
+                          }
                         ).then(function() {
-                          
+                            context.$emit('categoryRemoved');
                             console.log('Success!');
                         }).catch(function() {
                             console.log('Failure!');

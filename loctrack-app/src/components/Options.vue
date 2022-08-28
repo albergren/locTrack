@@ -28,7 +28,7 @@
                     <input type="checkbox"  :value=location.properties.pk v-model="checkedLocations">
                 </td>
                 <td>
-                    <button v-on:click="editLocation">Edit</button>
+                    <button v-on:click="editLocation">  <font-awesome-icon icon="edit" /></button>
 
                 </td>
             </tr>
@@ -37,15 +37,23 @@
   
 
     
-    <div class="button" @click="toggleChildren"><h3>Categories</h3></div>
+    <div class="button" @click="toggleChildren">
+<h3>
+    <span  v-if="showChildren" class="arrow-icon"> <font-awesome-icon icon="chevron-down" /></span>
+    <span  v-else class="arrow-icon"> <font-awesome-icon icon="chevron-right" /></span>
+    Categories    
+ <div  style="float:right">
+            <add-category-button  @categoryAdded="getChildCategories(categoryID)" v-bind:categoryID="categoryID"/>
+    </div>
+
+</h3>
+
+    </div>
         <div  v-if="showChildren">
     <div v-for="category in categories" :key="category.pk" >
                 <category-item v-bind:categoryID="category.pk" v-bind:categoryName="category.fields.name"/>
 </div>
-    <div>
-            <add-category-button v-bind:categoryID="null"/>
 
-    </div>
     </div>
   </div>
 </template>
@@ -73,11 +81,11 @@ export default {
             toDate: '',
             locations: [],
             checkedLocations: [],
-            parentCategory: null,
+            categoryID: null,
             categories: [],
             files: '',
             showChildren: false,
-                     
+            
         };
     },
 
@@ -112,7 +120,7 @@ export default {
                      })
         },
 
-        getChildCategories: function (id) {            
+        getChildCategories: function (id) {
         axios.get('http://localhost:8000/mapVisual/child-categories', {params: {  categoryID: id }}
                        ).then(resp => {
                            let data = JSON.parse(resp.data);
@@ -152,7 +160,8 @@ export default {
         },
 
         toggleChildren() {
-              this.showChildren = !this.showChildren;
+            this.showChildren = !this.showChildren;
+            
           }
 
         
@@ -178,27 +187,40 @@ export default {
 	display: inline-block;
 	font-size: 16px;
 	padding-left:10px;
+                padding: 10px;
+
 	box-sizing:border-box;
 	cursor: pointer;
     }
 
     .subbutton {
 	background-color: darkgrey; /* Green */
-	border: solid;
-	border-width: 1px;
-	border-color: #ffffff;
-	width: 100%;
-	color: white;
-	text-align: left;
-	
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-	padding: 10px;
-	padding-left:10px;
+        border: solid;
+        border-width: 1px;
+        border-color: lightgrey;
+        border-left:none;
+        border-right:none;
+        width: 100%;
+        color: white;
+        text-align: left;
+        
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        padding: 10px;
+        padding-left:10px;
 
-	box-sizing:border-box;
-	cursor: pointer;
+        box-sizing:border-box;
+        cursor: pointer;
+    }
+    .arrow-icon {
+        vertical-align: middle;
+	margin-right: 8px;
+    }
+  
+    .add-button {
+        vertical-align: middle;
+	margin-right: 8p;
     }
 </style>
 

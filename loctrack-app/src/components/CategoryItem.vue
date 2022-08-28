@@ -1,13 +1,16 @@
 <template>
     <span>
     <div>
-    <span class="subbutton" @click="toggleChildren"> {{ categoryName  }}
+    <span class="subbutton" @click="toggleChildren">
+    <span  v-if="showChildren" class="arrow-icon"> <font-awesome-icon icon="chevron-down" /></span>
+    <span  v-else class="arrow-icon"> <font-awesome-icon icon="chevron-right" /></span>
+{{ categoryName  }}
 
     <div style="float:right">
-    <remove-category-button v-bind:categoryID="categoryID"/>
+    <remove-category-button  @categoryRemoved="getChildCategories(categoryID)"  v-bind:categoryID="categoryID"/>
     </div>
         <div style="float:right">
-           <add-category-button v-bind:categoryID="categoryID"/>
+           <add-category-button @categoryAdded="getChildCategories(categoryID)" v-bind:categoryID="categoryID"/>
     
 </div>
 </span>
@@ -49,13 +52,14 @@ import RemoveCategoryButton from './RemoveCategoryButton.vue'
 
       mounted() {
           this.getChildCategories(this.categoryID);
-          console.log(this.categoryID);
       },
 
       
       methods: {
 
           getChildCategories: function (id) {
+              console.log("getchilds");
+              this.categories = [];
               axios.get('http://localhost:8000/mapVisual/child-categories', {params: {  categoryID: id }}
                        ).then(resp => {
                            let data = JSON.parse(resp.data);
