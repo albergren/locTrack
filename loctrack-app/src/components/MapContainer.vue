@@ -1,14 +1,20 @@
 <template>
-    <div id="map" style="height: 100%; width: 100%"/>
+  
+
+<div id="map" style="height: 100%; width: 100%">         <modal ref="modalName"/></div>
+
 </template>
 
 <script>
 import L from 'leaflet';
 import EventBus from '../event-bus';
+import Modal from "./Modal.vue";
 
 export default {
     name: "MapContainer",
     components: {
+        Modal,
+
     },
     
     data() {
@@ -25,13 +31,18 @@ export default {
             locationPolygonColor: '#5186db',
             locationsLayer: null,
             locationData: null,
+            opacity: this.opacityProp,
         }
     },
     
 
     
     methods: {
-        
+        openModal: function(modalType ) {
+            console.log(modalType);
+            this.$refs.modalName.openModal(modalType);
+        },
+
         newLocation: function(newLocation) {
             
             if (newLocation) {
@@ -47,7 +58,7 @@ export default {
         },
 
         changeOpacity: function(newOpacity) {
-            
+            this.opacity = newOpacity;
             this.geojsonLayer.eachLayer(function (layer) {
                 layer.setStyle({opacity : newOpacity })
             });
@@ -133,9 +144,8 @@ export default {
             let options = {
                 radius: 1,
                 color: 'purple',
-                opacity: this.opacityProp,
+                opacity: this.opacity,
             };
-            
             for (let i = 0; i < daysDiff; i++) {
                 let formattedDate1 = date.toISOString()
                 let date2 = new Date(date.setDate(date.getDate() + 1));
@@ -181,6 +191,7 @@ export default {
         EventBus.$on('opacity', this.changeOpacity);
         EventBus.$on('checkedLocations', this.showCheckedLocations);
         EventBus.$on('locationData', this.setLocationData);
+	EventBus.$on('openModal', this.openModal);
     },
     
     mounted() {

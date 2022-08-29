@@ -1,10 +1,13 @@
 
 
 <template>
-    <div id="interface">
+  
+<div id="interface">
 
         <div class=" cell-map">
-    <map-container /> 
+          <map-container/>  
+        
+
         </div>
         <div class=" cell-edit">
             <options/>
@@ -17,20 +20,26 @@
 
 
 <script>
- import  MapContainer  from './MapContainer.vue'
- import Options from './Options.vue'
+import  MapContainer  from './MapContainer.vue'
+import Options from './Options.vue'
 
- export default {
-     name: 'Interface',
-     components: {
-         MapContainer,
-         Options,
-     },
-     
-     data: function() {
-         return {
-         };
-     },
+export default {
+    name: 'Interface',
+    components: {
+        MapContainer,
+        Options,
+	
+    },
+    
+    data: function() {
+        return {
+        };
+    },
+    
+    methods: {
+
+    },
+
  }
 </script>
 

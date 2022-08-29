@@ -2,7 +2,8 @@
 <template>
     <div>
     <div >
-    <button v-if="!newLocation" v-on:click="createNewLocation">New location</button>
+      <button v-if="!newLocation" v-on:click="createNewLocation"> <font-awesome-icon icon="plus" /> </button>
+    
     </div>
     <div v-if="newLocation">
     <br>
